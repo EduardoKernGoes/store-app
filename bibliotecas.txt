@@ -3,5 +3,5 @@ djangorestframework
 django-filter
 markdown
 pillow
-psycopg[binary]
+oracledb
 python-decouple
