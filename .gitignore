@@ -1,4 +1,6 @@
 /storeapp/__pycache__/*
+/apps/core/__pycache__/*
+/apps/core/migrations/*
 .vscode
 .env
 Wallet_O09X4KFX0QYPXU0P.zip
