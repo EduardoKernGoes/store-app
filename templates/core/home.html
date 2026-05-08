@@ -1,9 +1,201 @@
 {% extends 'base.html' %}
-
-{% block title %}
-    {{ block.super }}
-{% endblock title %}
-
-{% block body %}
-
-{% endblock body %}
+{% load static %}
+ 
+{% block title %}LuxoStore - Loja Premium Online{% endblock %}
+ 
+{% block content %}
+ 
+<!-- Hero Section -->
+<section class="hero">
+    <div class="container">
+        <div class="hero-content">
+            <h1>Descobra Luxo e Elegância</h1>
+            <p>Coleção exclusiva de produtos premium para quem valiza qualidade e estilo</p>
+            <div class="hero-buttons">
+                <a href="#" class="btn btn-primary">Explorar Loja</a>
+                <a href="#" class="btn btn-outline" style="color: white; border-color: white;">Saiba Mais</a>
+            </div>
+        </div>
+    </div>
+</section>
+ 
+<!-- Categorias Destaque -->
+<section class="section">
+    <div class="container">
+        <div class="section-title">
+            <h2>Categorias Populares</h2>
+            <p style="font-size: 1.1rem; color: var(--text-light);">Explore nossos melhores produtos por categoria</p>
+        </div>
+ 
+        <div class="grid grid-3">
+            {% for category in categories %}
+            <div style="
+                background: linear-gradient(135deg, rgba(212, 175, 55, 0.1) 0%, rgba(212, 175, 55, 0.05) 100%);
+                border: 2px solid var(--border);
+                border-radius: 0.5rem;
+                padding: 3rem 2rem;
+                text-align: center;
+                cursor: pointer;
+                transition: all 0.3s ease;
+            "
+            onmouseover="this.style.borderColor='var(--secondary)'; this.style.transform='translateY(-5px)';"
+            onmouseout="this.style.borderColor='var(--border)'; this.style.transform='translateY(0)';">
+                <div style="font-size: 3rem; margin-bottom: 1rem;">{{ category.icon }}</div>
+                <h3 style="margin-bottom: 0.5rem;">{{ category.name }}</h3>
+                <p style="color: var(--text-light); font-size: 0.9rem; margin-bottom: 1rem;">{{ category.description }}</p>
+                <a href="#" class="btn btn-sm btn-outline">
+                    Ver Produtos →
+                </a>
+            </div>
+            {% empty %}
+            <div style="grid-column: 1 / -1; text-align: center; padding: 2rem;">
+                <p style="color: var(--text-light);">Categorias carregando...</p>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+ 
+<!-- Produtos em Destaque -->
+<section class="section" style="background-color: #fafafa;">
+    <div class="container">
+        <div class="section-title">
+            <h2>Produtos em Destaque</h2>
+            <p style="font-size: 1.1rem; color: var(--text-light);">Confira as melhores seleções do momento</p>
+        </div>
+ 
+        <div class="grid grid-4">
+            {% for product in featured_products %}
+            <div class="product-card">
+                <div class="product-image">
+                    {% if product.image %}
+                        <img src="{{ product.image.url }}" alt="{{ product.name }}">
+                    {% else %}
+                        <div style="background: linear-gradient(135deg, #d4af37 0%, #f5deb3 100%); width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; color: white; font-size: 3rem;">
+                            📦
+                        </div>
+                    {% endif %}
+                    {% if product.discount %}
+                    <span class="product-badge">-{{ product.discount }}%</span>
+                    {% endif %}
+                </div>
+ 
+                <div class="product-info">
+                    <div class="product-category">{{ product.category.name }}</div>
+                    <h4 class="product-name">{{ product.name }}</h4>
+                    <p class="product-description">{{ product.description|truncatewords:15 }}</p>
+ 
+                    <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 1rem;">
+                        <span class="rating">★★★★★</span>
+                        <span style="color: var(--text-light); font-size: 0.875rem;">({{ product.reviews_count }} avaliações)</span>
+                    </div>
+ 
+                    <div class="product-footer">
+                        <div>
+                            <div class="product-price">
+                                {% if product.original_price %}
+                                    <span class="original">R$ {{ product.original_price }}</span>
+                                {% endif %}
+                                R$ {{ product.price|floatformat:2 }}
+                            </div>
+                        </div>
+                        <a href="#" class="btn btn-sm btn-primary">
+                            Ver
+                        </a>
+                    </div>
+                </div>
+            </div>
+            {% empty %}
+            <div style="grid-column: 1 / -1; text-align: center; padding: 3rem;">
+                <p style="color: var(--text-light); font-size: 1.1rem;">Produtos carregando...</p>
+            </div>
+            {% endfor %}
+        </div>
+ 
+        <div style="text-align: center; margin-top: 3rem;">
+            <a href="#" class="btn btn-dark">Ver Todos os Produtos</a>
+        </div>
+    </div>
+</section>
+ 
+<!-- Newsletter -->
+<section class="section" style="background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%); color: white;">
+    <div class="container">
+        <div style="max-width: 600px; margin: 0 auto; text-align: center;">
+            <h2 style="color: white; margin-bottom: 1rem;">Receba as Melhores Ofertas</h2>
+            <p style="color: #d1d5db; margin-bottom: 2rem; font-size: 1.1rem;">
+                Assine nossa newsletter e ganhe 10% de desconto na sua primeira compra
+            </p>
+ 
+            <form style="display: flex; gap: 0.5rem;">
+                {% csrf_token %}
+                <input type="email" placeholder="seu@email.com" required
+                    style="flex: 1; padding: 0.875rem 1.5rem; border: none; border-radius: 0.375rem; background: white; color: var(--primary);">
+                <button type="submit" class="btn btn-primary">Inscrever</button>
+            </form>
+ 
+            <p style="color: #9ca3af; font-size: 0.875rem; margin-top: 1rem;">
+                Nunca compartilharemos seu email. Você pode se desinscrever a qualquer momento.
+            </p>
+        </div>
+    </div>
+</section>
+ 
+<!-- Destaques -->
+<section class="section">
+    <div class="container">
+        <div class="grid grid-3">
+            <div style="text-align: center;">
+                <div style="font-size: 2.5rem; margin-bottom: 1rem; color: var(--secondary);">🚚</div>
+                <h4>Frete Grátis</h4>
+                <p style="color: var(--text-light);">Em compras acima de R$ 300</p>
+            </div>
+ 
+            <div style="text-align: center;">
+                <div style="font-size: 2.5rem; margin-bottom: 1rem; color: var(--secondary);">🔄</div>
+                <h4>Troca Garantida</h4>
+                <p style="color: var(--text-light);">Até 30 dias após a compra</p>
+            </div>
+ 
+            <div style="text-align: center;">
+                <div style="font-size: 2.5rem; margin-bottom: 1rem; color: var(--secondary);">🛡️</div>
+                <h4>Segurança Garantida</h4>
+                <p style="color: var(--text-light);">Compre com confiança e segurança</p>
+            </div>
+        </div>
+    </div>
+</section>
+ 
+<!-- Clientes Satisfeitos -->
+<section class="section" style="background-color: #fafafa;">
+    <div class="container">
+        <div class="section-title">
+            <h2>Nossos Clientes Amam Nós</h2>
+            <p style="font-size: 1.1rem; color: var(--text-light);">Veja o que dizem sobre nossos produtos e serviço</p>
+        </div>
+ 
+        <div class="grid grid-3">
+            {% for testimonial in testimonials %}
+            <div style="background: white; padding: 2rem; border-radius: 0.5rem; border-left: 4px solid var(--secondary); box-shadow: var(--shadow-sm);">
+                <div style="display: flex; align-items: center; margin-bottom: 1rem;">
+                    <div style="width: 50px; height: 50px; background: linear-gradient(135deg, var(--secondary), #f5deb3); border-radius: 50%; margin-right: 1rem;"></div>
+                    <div>
+                        <h5 style="margin: 0;">{{ testimonial.author }}</h5>
+                        <p style="margin: 0; color: var(--text-light); font-size: 0.875rem;">{{ testimonial.position }}</p>
+                    </div>
+                </div>
+                <div style="color: var(--secondary); margin-bottom: 0.5rem;">★★★★★</div>
+                <p style="color: var(--text-light); line-height: 1.7;">
+                    "{{ testimonial.text }}"
+                </p>
+            </div>
+            {% empty %}
+            <div style="grid-column: 1 / -1; text-align: center; padding: 2rem;">
+                <p style="color: var(--text-light);">Depoimentos carregando...</p>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+ 
+{% endblock %}
